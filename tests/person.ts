@@ -17,15 +17,15 @@ export class Person {
   }
 
   // Getters for private properties
-  public getName(): string {
+  getName(): string {
     return this.name;
   }
 
-  public getAge(): number {
+  getAge(): number {
     return this.age;
   }
 
-  public getCity(): string {
+  getCity(): string {
     return this.city;
   }
 
@@ -34,7 +34,7 @@ export class Person {
   }
 
   celebrateBirthday(): void {
-    this.age = this.age + 1;
+    this.age++;
   }
 
   updateCity(newCity: string): void {
@@ -42,14 +42,14 @@ export class Person {
   }
 
   isAdult(): boolean {
-    return (this.age >= 18);
+    return this.age >= 18;
   }
 
   hasSameCity(other: Person): boolean {
-    return this.city == other.city;
+    return this.city === other.city;
   }
-  
-  public toJSON(): object {
+
+  toJSON(): { name: string; age: number; city: string } {
     return {
       name: this.name,
       age: this.age,
@@ -58,8 +58,13 @@ export class Person {
   }
 
   static fromJSON(data: any): Person {
-        if (!data || typeof data.name !== 'string' || typeof data.age !== 'number' || typeof data.city !== 'string') {
-      throw new Error('Invalid data format for creating a Person instance.');
+    if (
+      !data ||
+      typeof data.name !== "string" ||
+      typeof data.age !== "number" ||
+      typeof data.city !== "string"
+    ) {
+      throw new Error("Invalid data format for creating a Person instance.");
     }
     return new Person(data.name, data.age, data.city);
   }

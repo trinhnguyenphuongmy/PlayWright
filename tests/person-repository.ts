@@ -11,11 +11,12 @@ export class PersonRepository {
     this.outputFilePath = outputFilePath;
   }
 
-  public loadPeople(): Person[] {
+  loadPeople(): Person[] {
     //Load people from data/people.json
     try {
       if (!fs.existsSync(this.filePath)) {
-        throw new Error(`File not found at path: ${this.filePath}`);
+        console.error(`File not found at path: ${this.filePath}`);
+        return [];
       }
 
       const fileContent = fs.readFileSync(this.filePath, "utf-8");
@@ -23,19 +24,20 @@ export class PersonRepository {
 
       // Validate that the loaded data is an array
       if (!Array.isArray(data)) {
-        throw new Error("JSON data is not an array.");
+        console.error("JSON data is not an array.");
+        return [];
       }
 
       //Map them to Person instances using Person.fromJSON
       return data.map((item) => Person.fromJSON(item));
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error loading people:", error.message);
       return []; // Return an empty array on error
     }
   }
 
   //Save people to data/people.output.json
-  public savePeople(people: Person[]): void {
+  savePeople(people: Person[]): void {
     try {
       const dataToSave = people.map((person) => person.toJSON());
       const jsonString = JSON.stringify(dataToSave, null, 2);
@@ -44,7 +46,7 @@ export class PersonRepository {
         `Successfully saved ${people.length} people to ${this.outputFilePath}`
       );
       console.log("");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error saving people:", error.message);
     }
   }
